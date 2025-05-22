@@ -37,7 +37,8 @@ export namespace $Enums {
   SPORT: 'SPORT',
   HEALTH: 'HEALTH',
   FOOD: 'FOOD',
-  NEWS: 'NEWS'
+  NEWS: 'NEWS',
+  IT: 'IT'
 };
 
 export type CategoryBlog = (typeof CategoryBlog)[keyof typeof CategoryBlog]
@@ -260,8 +261,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.7.0
-   * Query Engine version: 3cff47a7f5d65c3ea74883f1d736e41d68ce91ed
+   * Prisma Client JS version: 6.8.0
+   * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
    */
   export type PrismaVersion = {
     client: string
@@ -4670,10 +4671,10 @@ export namespace Prisma {
 
   export type BlogWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    title?: string
     AND?: BlogWhereInput | BlogWhereInput[]
     OR?: BlogWhereInput[]
     NOT?: BlogWhereInput | BlogWhereInput[]
+    title?: StringFilter<"Blog"> | string
     thumbnail?: StringFilter<"Blog"> | string
     category?: EnumCategoryBlogFilter<"Blog"> | $Enums.CategoryBlog
     content?: StringFilter<"Blog"> | string
@@ -4681,7 +4682,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Blog"> | Date | string
     updatedAt?: DateTimeFilter<"Blog"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id" | "title">
+  }, "id">
 
   export type BlogOrderByWithAggregationInput = {
     id?: SortOrder

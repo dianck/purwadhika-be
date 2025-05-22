@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../generated/prisma"
+  binaryTargets = ["native", "windows"]
 }
 
 datasource db {
@@ -23,10 +24,10 @@ model User {
 
 model Blog {
   id        String       @id @default(uuid())
-  title     String       @unique
+  title     String
   thumbnail String
   category  CategoryBlog
-  content   String       @db.Text
+  content   String
   userId    Int
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
@@ -46,4 +47,5 @@ enum CategoryBlog {
   HEALTH
   FOOD
   NEWS
+  IT
 }

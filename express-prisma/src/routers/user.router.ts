@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { UserController } from "../controllers/user.controller";
-import { verifyToken } from "../middlewares/verify";
+import { verifyToken } from "../middlewares/verify from";
 
 
 export class UserRouter{

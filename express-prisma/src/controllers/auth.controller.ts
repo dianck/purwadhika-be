@@ -35,9 +35,15 @@ export class AuthController{
           }
         });
     
+        //token untuk regustrasi
         const payload = { id: user.id };
         const token = sign(payload, process.env.SECRET_KEY_VERIFY!, { expiresIn: "10m" });
     
+        const expiredAt = new Date (Date.now() + 10 * 60 * 1000)
+        await prisma.email_verifications.create({
+            data: {userId: user.id, token, expiredAt},
+        });
+
         const templatePath = path.join(__dirname, "../templates", "verify.hbs");
         if (!fs.existsSync(templatePath)) {
           res.status(500).send({ message: "Email template not found" });
@@ -48,7 +54,7 @@ export class AuthController{
         const compiledTemplate = Handlebars.compile(templateSource);
         const html = compiledTemplate({
           username: user.username,
-          link: `http://localhost:3000/api/auth/verify?token=${token}`
+          link: `http://localhost:3000/verify?token=${token}`
         });
     
         await transporter.sendMail({
@@ -114,6 +120,36 @@ export class AuthController{
         res.status(500).send({ message: "Internal error", error: err });
       }
     }
+
+
+    async verify(req: Request, res: Response){
+      try{
+        const { id } = res.locals?.user;
+        const token  = res.locals?.token;
+
+        const data = await prisma.email_verifications.findFirst({
+          where: {token, userId: id},
+        })
+
+        if(!data) throw {message: "Invalid link verification "};
+
+        await prisma.user.update({
+          data: {isVerified: true},
+          where: {id},
+        })
+
+        await prisma.email_verifications.delete({
+          where: {id: data.id}
+        });
+
+        res.status(200).send({message: "Verification Successfully"});
+
+      }catch(err){
+        console.log(err);
+        res.status(400).send(err);
+      }
+    }
+
 }
 
 
@@ -141,6 +177,6 @@ export class AuthController{
   -d '{
     "username": "Andi6",
     "email": "budi6@gmail.com",
-    "password": "ab@123456"
+    "password": "asd123456"
   }'
   */
